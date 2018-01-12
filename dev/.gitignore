@@ -1,0 +1,2 @@
+# At least the "random" and/or "urandom" device nodes are needed here:
+*random*

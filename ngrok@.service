@@ -1,0 +1,21 @@
+[Unit]
+Description=Share local port(s) with ngrok : single service %i
+After=syslog.target network.target
+
+[Service]
+PrivateTmp=true
+User=root
+Type=simple
+Restart=always
+RestartSec=1min
+###StandardOutput=null
+###StandardError=null
+ExecStart=/opt/ngrok/ngrok.sh start %i
+ExecStop=/bin/kill -TERM $MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
+### End startup when tunnels have actually established
+### TODO: How do ports differ if there are several copies running?
+ExecStartPost=/bin/sh -c "curl --help >/dev/null 2>/dev/null || exit 0 ; echo 'Waiting for tunnels...'; sleep 2; while ! curl -s http://localhost:4040/api/tunnels | grep -v '{\"tunnels\":\[\],\"uri\":\"/api/tunnels\"}' ; do sleep 1 ; done; true;"
+
+[Install]
+WantedBy=multi-user.target
