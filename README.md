@@ -12,28 +12,31 @@ CLI options).
 
 For setup:
 
-* place contents of this repo into `/opt/ngrok`;
+* place contents of this repo into a new `/opt/ngrok/` directory;
 * get the relevant Linux version for your platform from
   https://ngrok.com/download unpacked as a single
   `/opt/ngrok/bin/ngrok` binary program file;
 * make device nodes for `/opt/ngrok/dev/*random` same as on your
   host system, e.g.:
 ````
-# mknod -m 666 random c 1 8
-# mknod -m 666 urandom c 1 9
+# cd /opt/ngrok/dev/ && \
+  mknod -m 666 random c 1 8 && \
+  mknod -m 666 urandom c 1 9
 ````
-* symlink the systemd unit to install it:
+* symlink the `systemd` unit to install it, e.g.:
 ````
-# ln -sr /opt/ngrok/ngrok.service /etc/systemd/system/multi-user.target.wants
+# ln -sr /opt/ngrok/ngrok.service /etc/systemd/system/multi-user.target.wants/
 # systemctl daemon-reload
 ````
 * customize the `/opt/ngrok/root/.ngrok2/ngrok.yml.example` into your own
   `/opt/ngrok/root/.ngrok2/ngrok.yml` complete with services you want and
-  the authorization token you get when signing up for an ngrok.com account;
+  the authorization token you get when signing up for an http://ngrok.com/
+  account;
 * try starting the service and walk your way through error messages, if any.
-* note that if you have `curl` on your system, the service unit will try to
-  wait for tunnels to get established before exiting by querying the client's
-  internal REST API in the loop.
+* note that if you have `curl` on your host system, the service unit will
+  try to wait for the tunnels to get established before exiting by querying
+  the client's internal REST API in the loop; otherwise it will be complete
+  as soon as the daemon was launched.
 
 There is also a `ngrok@.service` intended for multi-instance services, but
 for this PoC it was not clear how well that is supported by ngrok.com and
