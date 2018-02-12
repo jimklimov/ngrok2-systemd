@@ -14,7 +14,7 @@ ExecStart=/opt/ngrok/ngrok.sh start --all
 ExecStop=/bin/kill -TERM $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
 ### End startup when tunnels have actually established
-ExecStartPost=/bin/sh -c "curl --help >/dev/null 2>/dev/null || exit 0 ; echo 'Waiting for tunnels...'; sleep 2; while ! curl -s http://localhost:4040/api/tunnels | grep -v '{\"tunnels\":\[\],\"uri\":\"/api/tunnels\"}' ; do sleep 1 ; done; true;"
+ExecStartPost=/bin/sh -c "curl --help >/dev/null 2>/dev/null || { sleep 10; exit 0; } ; echo 'Waiting for tunnels...'; sleep 2; while ! curl -s http://localhost:4040/api/tunnels | grep -v '{\"tunnels\":\[\],\"uri\":\"/api/tunnels\"}' ; do sleep 1 ; done; true;"
 
 [Install]
 WantedBy=multi-user.target

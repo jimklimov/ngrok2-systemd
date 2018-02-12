@@ -36,7 +36,7 @@ For setup:
 * note that if you have `curl` on your host system, the service unit will
   try to wait for the tunnels to get established before exiting by querying
   the client's internal REST API in the loop; otherwise it will be complete
-  as soon as the daemon was launched.
+  an arbitrarily chosen 10 seconds after the daemon was launched.
 
 There is also a `ngrok@.service` intended for multi-instance services, but
 for this PoC it was not clear how well that is supported by ngrok.com and
